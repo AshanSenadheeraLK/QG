@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H.M. SENADHEERA WATERPROOFINGS - Quotation Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div id="splashLoader">
+        <div class="loader"></div>
+    </div>
+    <div class="container">
+        <header>
+            <img src="Logo.jpg" alt="HM Senadheera Waterproofings Logo" class="logo">
+            <h1>H.M. SENADHEERA WATERPROOFINGS</h1>
+            <h2>Quotation Generator</h2>
+        </header>
+
+        <div class="app-container">
+            <section class="form-container">
+                <h3>Create New Quotation</h3>
+                <form id="quotationForm">
+                    <div class="form-group">
+                        <label for="quoteNumber">Quote Number:</label>
+                        <input type="text" id="quoteNumber" name="quoteNumber" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quoteDate">Date:</label>
+                        <input type="date" id="quoteDate" name="quoteDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clientName">Client Name:</label>
+                        <input type="text" id="clientName" name="clientName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clientAddress">Client Address: <span class="optional-text">(Optional)</span></label>
+                        <textarea id="clientAddress" name="clientAddress" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expirationDate">Expiration Date:</label>
+                        <input type="date" id="expirationDate" name="expirationDate">
+                    </div>
+                    
+                    <div class="form-group items-section">
+                        <h4>Service Items</h4>
+                        <div id="itemsContainer">
+                            <div class="item-row">
+                                <div class="item-details">
+                                    <input type="text" placeholder="Description" class="item-description" required>
+                                    
+                                    <div class="item-subrow">
+                                        <div class="price-input-group">
+                                            <label>Price per square foot (LKR):</label>
+                                            <input type="number" placeholder="Price" class="item-price" min="0" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="item-subrow">
+                                        <div class="area-input-group">
+                                            <label>Area (sq.ft):</label>
+                                            <div class="area-control">
+                                                <input type="number" placeholder="Area" class="item-area" min="0">
+                                                <label class="checkbox-label"><input type="checkbox" class="to-be-measured"> To be measured</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="item-actions">
+                                    <div class="total-input-group">
+                                        <span class="item-total">0.00</span>
+                                        <label class="checkbox-label"><input type="checkbox" class="to-be-calculated"> To be calculated</label>
+                                    </div>
+                                    <button type="button" class="remove-item">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="addItemBtn">Add Item</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subtotal">Subtotal (LKR):</label>
+                        <input type="text" id="subtotal" name="subtotal" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discount">Discount (LKR):</label>
+                        <input type="number" id="discount" name="discount" min="0" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tax">Tax / VAT (LKR):</label>
+                        <input type="number" id="tax" name="tax" min="0" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="total">Total (LKR):</label>
+                        <input type="text" id="total" name="total" readonly>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" id="generateBtn">Generate Quotation</button>
+                        <button type="button" id="resetBtn">Reset Form</button>
+                    </div>
+                </form>
+                
+                <div class="print-actions">
+                    <h4>Print Options</h4>
+                    <div class="print-buttons">
+                        <button type="button" id="savePdfBtn" class="print-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            Save as PDF
+                        </button>
+                        <button type="button" id="printNowBtn" class="print-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                            Print Now
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="preview-container" id="quotationPreview">
+                <div class="quotation-document" id="quotationToPrint">
+                    <div class="quote-header">
+                        <div class="company-info">
+                            <h2>H.M. SENADHEERA WATERPROOFINGS</h2>
+                            <p class="tagline">Stop Waterleaks!</p>
+                            <p>No.109/D, Kudahakapola North, Ja-Ela.</p>
+                            <p>+94 71 892 0885 | +94 78 248 5120</p>
+                            <p>www.facebook.com/hmswpsl</p>
+                        </div>
+                        <div class="quote-info">
+                            <h2>QUOTE</h2>
+                            <p><strong>QUOTE #</strong> <span id="preview-quoteNumber"></span></p>
+                            <p><strong>Date:</strong> <span id="preview-quoteDate"></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="client-section">
+                        <div class="client-info">
+                            <p><strong>To:</strong> <span id="preview-clientName"></span></p>
+                            <p id="preview-clientAddress"></p>
+                        </div>
+                        <div class="expiration-info">
+                            <p><strong>Expiration Date:</strong> <span id="preview-expirationDate"></span></p>
+                        </div>
+                    </div>
+                    
+                    <table class="quote-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Price per one square foot (LKR)</th>
+                                <th>Total Square Feet</th>
+                                <th>Total (LKR)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="preview-items">
+                            <!-- Items will be inserted here -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="subtotal-row">
+                                <td>Subtotal (LKR)</td>
+                                <td colspan="3" id="preview-subtotal"></td>
+                            </tr>
+                            <tr>
+                                <td>Tax / VAT (LKR)</td>
+                                <td colspan="3" id="preview-tax"></td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total (LKR)</td>
+                                <td colspan="3" id="preview-total"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <div class="important-points">
+                        <h3>Please Note:</h3>
+                        <ul>
+                            <li>A down payment of 50% is required upon acceptance of the quote, with the remaining balance due upon completion of the work.</li>
+                            <li>If the work is canceled after the quote acceptance, a cancellation fee (10% of the total quoted price) will apply.</li>
+                            <li>The quote is valid for a specific period, such as 7 days, and may be subject to price changes after the expiration date.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="document-note-section">
+                        <div class="document-note">
+                            <p>Kindly be advised that this was computer-generated, and therefore, a signature is not necessary.</p>
+                        </div>
+                        <div class="company-seal">
+                            <img src="assets/hmsenadheera_seal_small.png" alt="HM Senadheera Waterproofings Official Seal" class="seal-image">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 H.M. Senadheera Waterproofings. All rights reserved.</p>
+        <p id="footerCredit">Designed, Developed and powered by <a href="http://ashansenadheera.lk" target="_blank">H.M. Ashan Janith Dilshan Senadheera</a>.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "hmsenadheera-seal-generator",
+  "version": "1.0.0",
+  "description": "Generate a company seal for HM Senadheera Waterproofings",
+  "main": "generate-seal.js",
+  "scripts": {
+    "generate": "node generate-seal.js",
+    "start": "http-server . -o create-seal.html"
+  },
+  "dependencies": {
+    "canvas": "^2.11.2"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+} 

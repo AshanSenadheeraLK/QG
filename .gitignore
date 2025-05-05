@@ -1,0 +1,86 @@
+# Node dependencies
+node_modules/
+jspm_packages/
+
+# PDF files
+*.pdf
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directories
+coverage/
+*.lcov
+.nyc_output/
+
+# Build and release directories
+build/
+dist/
+out/
+lib-cov/
+.grunt/
+build/Release/
+
+# NPM and Yarn
+.lock-wscript
+.npm/
+.yarn-integrity
+
+# REPL history and pack output
+.node_repl_history
+*.tgz
+
+# ESLint cache
+.eslintcache
+
+# Environment variables
+.env
+.env.*.local
+
+# Caches
+.cache/
+.parcel-cache/
+.temp/
+
+# Framework/build tool outputs
+.next/
+.nuxt/
+public/
+.vuepress/dist/
+.docusaurus/
+
+# Serverless and cache folders
+.serverless/
+.fusebox/
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Editor temporary files
+*~
+*.swp
+*.swo 
