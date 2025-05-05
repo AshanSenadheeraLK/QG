@@ -3,48 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="H.M. SENADHEERA WATERPROOFINGS - Professional Quotation Generator">
+    <meta name="theme-color" content="#2c3e50">
     <title>H.M. SENADHEERA WATERPROOFINGS - Quotation Generator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-    <div id="splashLoader">
+    <div id="splashLoader" role="progressbar" aria-label="Loading application">
         <div class="loader"></div>
     </div>
+
     <div class="container">
         <header>
-            <img src="Logo.jpg" alt="HM Senadheera Waterproofings Logo" class="logo">
+            <img src="Logo.jpg" alt="HM Senadheera Waterproofings Logo" class="logo" width="80" height="80">
             <h1>H.M. SENADHEERA WATERPROOFINGS</h1>
             <h2>Quotation Generator</h2>
         </header>
 
-        <div class="app-container">
+        <main class="app-container">
             <section class="form-container">
                 <h3>Create New Quotation</h3>
-                <form id="quotationForm">
+                <form id="quotationForm" autocomplete="on">
                     <div class="form-group">
-                        <label for="quoteNumber">Quote Number:</label>
-                        <input type="text" id="quoteNumber" name="quoteNumber" required>
+                        <label for="quoteNumber">Quote Number</label>
+                        <input type="text" id="quoteNumber" name="quoteNumber" required 
+                               aria-required="true" autocomplete="off">
                     </div>
                     
                     <div class="form-group">
-                        <label for="quoteDate">Date:</label>
-                        <input type="date" id="quoteDate" name="quoteDate" required>
+                        <label for="quoteDate">Date</label>
+                        <input type="date" id="quoteDate" name="quoteDate" required 
+                               aria-required="true">
                     </div>
                     
                     <div class="form-group">
-                        <label for="clientName">Client Name:</label>
-                        <input type="text" id="clientName" name="clientName" required>
+                        <label for="clientName">Client Name</label>
+                        <input type="text" id="clientName" name="clientName" required 
+                               aria-required="true" autocomplete="name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="clientAddress">Client Address: <span class="optional-text">(Optional)</span></label>
-                        <textarea id="clientAddress" name="clientAddress" rows="3"></textarea>
+                        <label for="clientAddress">Client Address <span class="optional-text">(Optional)</span></label>
+                        <textarea id="clientAddress" name="clientAddress" rows="3" 
+                                  autocomplete="street-address"></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="expirationDate">Expiration Date:</label>
+                        <label for="expirationDate">Expiration Date</label>
                         <input type="date" id="expirationDate" name="expirationDate">
                     </div>
                     
@@ -53,21 +60,27 @@
                         <div id="itemsContainer">
                             <div class="item-row">
                                 <div class="item-details">
-                                    <input type="text" placeholder="Description" class="item-description" required>
+                                    <input type="text" placeholder="Description" class="item-description" 
+                                           required aria-required="true">
                                     
                                     <div class="item-subrow">
                                         <div class="price-input-group">
-                                            <label>Price per square foot (LKR):</label>
-                                            <input type="number" placeholder="Price" class="item-price" min="0" required>
+                                            <label>Price per square foot (LKR)</label>
+                                            <input type="number" placeholder="0.00" class="item-price" 
+                                                   min="0" step="0.01" required aria-required="true">
                                         </div>
                                     </div>
                                     
                                     <div class="item-subrow">
                                         <div class="area-input-group">
-                                            <label>Area (sq.ft):</label>
+                                            <label>Area (sq.ft)</label>
                                             <div class="area-control">
-                                                <input type="number" placeholder="Area" class="item-area" min="0">
-                                                <label class="checkbox-label"><input type="checkbox" class="to-be-measured"> To be measured</label>
+                                                <input type="number" placeholder="0.00" class="item-area" 
+                                                       min="0" step="0.01">
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" class="to-be-measured">
+                                                    <span>To be measured</span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -76,33 +89,38 @@
                                 <div class="item-actions">
                                     <div class="total-input-group">
                                         <span class="item-total">0.00</span>
-                                        <label class="checkbox-label"><input type="checkbox" class="to-be-calculated"> To be calculated</label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" class="to-be-calculated">
+                                            <span>To be calculated</span>
+                                        </label>
                                     </div>
-                                    <button type="button" class="remove-item">✕</button>
+                                    <button type="button" class="remove-item" aria-label="Remove item">✕</button>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" id="addItemBtn">Add Item</button>
+                        <button type="button" id="addItemBtn">
+                            <span aria-hidden="true">+</span> Add Item
+                        </button>
                     </div>
                     
                     <div class="form-group">
-                        <label for="subtotal">Subtotal (LKR):</label>
-                        <input type="text" id="subtotal" name="subtotal" readonly>
+                        <label for="subtotal">Subtotal (LKR)</label>
+                        <input type="text" id="subtotal" name="subtotal" readonly aria-readonly="true">
                     </div>
                     
                     <div class="form-group">
-                        <label for="discount">Discount (LKR):</label>
-                        <input type="number" id="discount" name="discount" min="0" value="0">
+                        <label for="discount">Discount (LKR)</label>
+                        <input type="number" id="discount" name="discount" min="0" value="0" step="0.01">
                     </div>
                     
                     <div class="form-group">
-                        <label for="tax">Tax / VAT (LKR):</label>
-                        <input type="number" id="tax" name="tax" min="0" value="0">
+                        <label for="tax">Tax / VAT (LKR)</label>
+                        <input type="number" id="tax" name="tax" min="0" value="0" step="0.01">
                     </div>
                     
                     <div class="form-group">
-                        <label for="total">Total (LKR):</label>
-                        <input type="text" id="total" name="total" readonly>
+                        <label for="total">Total (LKR)</label>
+                        <input type="text" id="total" name="total" readonly aria-readonly="true">
                     </div>
                     
                     <div class="form-actions">
@@ -115,7 +133,7 @@
                     <h4>Print Options</h4>
                     <div class="print-buttons">
                         <button type="button" id="savePdfBtn" class="print-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                                 <polyline points="17 21 17 13 7 13 7 21"></polyline>
                                 <polyline points="7 3 7 8 15 8"></polyline>
@@ -123,7 +141,7 @@
                             Save as PDF
                         </button>
                         <button type="button" id="printNowBtn" class="print-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <polyline points="6 9 6 2 18 2 18 9"></polyline>
                                 <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                                 <rect x="6" y="14" width="12" height="8"></rect>
@@ -161,33 +179,39 @@
                         </div>
                     </div>
                     
-                    <table class="quote-table">
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Price per one square foot (LKR)</th>
-                                <th>Total Square Feet</th>
-                                <th>Total (LKR)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="preview-items">
-                            <!-- Items will be inserted here -->
-                        </tbody>
-                        <tfoot>
-                            <tr class="subtotal-row">
-                                <td>Subtotal (LKR)</td>
-                                <td colspan="3" id="preview-subtotal"></td>
-                            </tr>
-                            <tr>
-                                <td>Tax / VAT (LKR)</td>
-                                <td colspan="3" id="preview-tax"></td>
-                            </tr>
-                            <tr class="total-row">
-                                <td>Total (LKR)</td>
-                                <td colspan="3" id="preview-total"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="quote-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Price per sq.ft (LKR)</th>
+                                    <th scope="col">Total sq.ft</th>
+                                    <th scope="col">Total (LKR)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="preview-items">
+                                <!-- Items will be inserted here -->
+                            </tbody>
+                            <tfoot>
+                                <tr class="subtotal-row">
+                                    <td colspan="3">Subtotal (LKR)</td>
+                                    <td id="preview-subtotal"></td>
+                                </tr>
+                                <tr class="discount-row">
+                                    <td colspan="3">Discount (LKR)</td>
+                                    <td id="preview-discount"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Tax / VAT (LKR)</td>
+                                    <td id="preview-tax"></td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td colspan="3">Total (LKR)</td>
+                                    <td id="preview-total"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                     
                     <div class="important-points">
                         <h3>Please Note:</h3>
@@ -203,17 +227,17 @@
                             <p>Kindly be advised that this was computer-generated, and therefore, a signature is not necessary.</p>
                         </div>
                         <div class="company-seal">
-                            <img src="assets/hmsenadheera_seal_small.png" alt="HM Senadheera Waterproofings Official Seal" class="seal-image">
+                            <img src="assets/hmsenadheera_seal_small.png" alt="HM Senadheera Waterproofings Official Seal" class="seal-image" width="120" height="120">
                         </div>
                     </div>
                 </div>
             </section>
-        </div>
+        </main>
     </div>
 
     <footer>
         <p>&copy; 2025 H.M. Senadheera Waterproofings. All rights reserved.</p>
-        <p id="footerCredit">Designed, Developed and powered by <a href="http://ashansenadheera.lk" target="_blank">H.M. Ashan Janith Dilshan Senadheera</a>.</p>
+        <p>Designed, Developed and powered by <a href="http://ashansenadheera.lk" target="_blank" rel="noopener">H.M. Ashan Janith Dilshan Senadheera</a></p>
     </footer>
 
     <script src="script.js"></script>
