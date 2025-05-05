@@ -248,126 +248,111 @@ function calculateTotals() {
     
     // Calculate each row total and add to subtotal
     document.querySelectorAll('.item-row').forEach(row => {
-        calculateRowTotal(row);
-        const totalText = row.querySelector('.item-total')?.textContent || '0.00';
-        if (totalText !== 'TBC') {
-            subtotal += parseFloat(totalText);
+        const totalSpan = row.querySelector('.item-total');
+        const toBeCalculated = row.querySelector('.to-be-calculated');
+        
+        if (totalSpan && totalSpan.textContent !== 'TBC' && !toBeCalculated.checked) {
+            subtotal += parseFloat(totalSpan.textContent || 0);
         }
     });
     
-    // Update subtotal
-    document.getElementById('subtotal').value = subtotal.toFixed(2);
+    // Display the subtotal
+    const subtotalDisplay = document.getElementById('subtotal');
+    if (subtotalDisplay) {
+        subtotalDisplay.value = subtotal.toFixed(2);
+    }
+    
+    // Get discount value
+    const discountInput = document.getElementById('discount');
+    const discount = discountInput && discountInput.value ? parseFloat(discountInput.value) : 0;
+    
+    // Get tax/VAT value
+    const taxInput = document.getElementById('tax');
+    const tax = taxInput && taxInput.value ? parseFloat(taxInput.value) : 0;
     
     // Calculate final total
-    const discount = parseFloat(document.getElementById('discount').value) || 0;
-    const tax = parseFloat(document.getElementById('tax').value) || 0;
     const total = subtotal - discount + tax;
     
-    document.getElementById('total').value = total.toFixed(2);
+    // Display the total
+    const totalDisplay = document.getElementById('total');
+    if (totalDisplay) {
+        totalDisplay.value = total.toFixed(2);
+    }
 }
 
-// Update the preview section
+// Update the quotation preview
 function updatePreview() {
-    // Update quote info
+    // Update basic quote details
     document.getElementById('preview-quoteNumber').textContent = document.getElementById('quoteNumber').value;
     
-    // Format dates
+    // Format dates for display
     const quoteDate = document.getElementById('quoteDate').value;
-    document.getElementById('preview-quoteDate').textContent = formatDate(quoteDate);
+    if (quoteDate) {
+        document.getElementById('preview-quoteDate').textContent = formatDate(quoteDate);
+    }
     
     const expirationDate = document.getElementById('expirationDate').value;
-    document.getElementById('preview-expirationDate').textContent = formatDate(expirationDate);
+    if (expirationDate) {
+        document.getElementById('preview-expirationDate').textContent = formatDate(expirationDate);
+    }
     
-    // Update client info
+    // Update client information
     document.getElementById('preview-clientName').textContent = document.getElementById('clientName').value;
     document.getElementById('preview-clientAddress').textContent = document.getElementById('clientAddress').value;
     
-    // Update items
-    const itemsContainer = document.getElementById('preview-items');
-    itemsContainer.innerHTML = '';
+    // Update items in the table
+    const previewItems = document.getElementById('preview-items');
+    previewItems.innerHTML = '';
     
-    let hasCalculableArea = false;
-    let hasCalculablePrice = false;
+    let anyToBeCalculated = false;
+    let anyToBeMeasured = false;
     
     document.querySelectorAll('.item-row').forEach(row => {
-        const description = row.querySelector('.item-description')?.value || '';
-        const price = row.querySelector('.item-price')?.value || '';
-        const toBeMeasured = row.querySelector('.to-be-measured')?.checked || false;
-        const toBeCalculated = row.querySelector('.to-be-calculated')?.checked || false;
-        const areaValue = row.querySelector('.item-area')?.value || '';
+        const description = row.querySelector('.item-description').value;
+        if (!description) return; // Skip empty rows
         
-        if (description || price) {
-            const itemRow = document.createElement('tr');
-            
-            // Show the price per square foot
-            let priceDisplay = price ? `${parseFloat(price).toFixed(2)}` : 'N/A';
-            
-            // For the square feet column
-            let areaDisplay;
-            if (toBeMeasured) {
-                areaDisplay = 'To be measured';
-                hasCalculableArea = true;
-            } else if (areaValue) {
-                areaDisplay = areaValue;
-            } else {
-                areaDisplay = 'To be measured';
-                hasCalculableArea = true;
-            }
-            
-            // For the total column, show special text if to be calculated/measured
-            let totalText;
-            if (toBeCalculated) {
-                totalText = 'To be calculated';
-                hasCalculablePrice = true;
-            } else if (toBeMeasured || !areaValue) {
-                totalText = `${priceDisplay}× Total Number of Square Feet`;
-                hasCalculableArea = true;
-            } else if (price && areaValue) {
-                const calculatedTotal = parseFloat(price) * parseFloat(areaValue);
-                totalText = calculatedTotal.toFixed(2);
-            } else {
-                totalText = `${priceDisplay}× Total Number of Square Feet`;
-                hasCalculableArea = true;
-            }
-            
-            itemRow.innerHTML = `
-                <td>${description || 'N/A'}</td>
-                <td style="text-align: right;">${priceDisplay}</td>
-                <td style="text-align: right;">${areaDisplay}</td>
-                <td style="text-align: right;">${totalText}</td>
-            `;
-            itemsContainer.appendChild(itemRow);
+        const price = row.querySelector('.item-price').value;
+        const areaInput = row.querySelector('.item-area');
+        const toBeMeasured = row.querySelector('.to-be-measured').checked;
+        const toBeCalculated = row.querySelector('.to-be-calculated').checked;
+        
+        const area = toBeMeasured ? 'To be measured' : (areaInput.value || '0');
+        
+        let total;
+        if (toBeCalculated) {
+            total = 'To be calculated';
+            anyToBeCalculated = true;
+        } else if (toBeMeasured) {
+            total = 'To be calculated';
+            anyToBeMeasured = true;
+        } else {
+            total = row.querySelector('.item-total').textContent;
         }
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${description}</td>
+            <td>${price}</td>
+            <td>${area}</td>
+            <td>${total}</td>
+        `;
+        previewItems.appendChild(tr);
     });
     
-    // Fill any empty rows to maintain visual layout
-    const currentRows = itemsContainer.querySelectorAll('tr').length;
-    for (let i = currentRows; i < 10; i++) {
-        const emptyRow = document.createElement('tr');
-        emptyRow.innerHTML = `
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        `;
-        itemsContainer.appendChild(emptyRow);
-    }
+    // Update subtotal, discount, tax, and total
+    document.getElementById('preview-subtotal').textContent = document.getElementById('subtotal').value;
     
-    // Update totals
-    const subtotalValue = document.getElementById('subtotal').value;
-    const taxValue = document.getElementById('tax').value || '0.00';
+    // Update discount display
+    const discountValue = document.getElementById('discount').value;
+    document.getElementById('preview-discount').textContent = discountValue > 0 ? discountValue : '0.00';
+    
+    // Update tax/VAT
+    document.getElementById('preview-tax').textContent = document.getElementById('tax').value;
+    
+    // Update final total
     const totalValue = document.getElementById('total').value;
-    
-    // If areas are to be measured, show "To be calculated" for subtotal and total
-    if (hasCalculableArea || hasCalculablePrice) {
-        document.getElementById('preview-subtotal').textContent = 'To be calculated (according to square footage, under the above prices)';
-        document.getElementById('preview-tax').textContent = '--';
-        document.getElementById('preview-total').textContent = 'To be calculated (according to square footage, under the above prices)';
-    } else {
-        document.getElementById('preview-subtotal').textContent = subtotalValue;
-        document.getElementById('preview-tax').textContent = taxValue;
-        document.getElementById('preview-total').textContent = totalValue;
-    }
+    document.getElementById('preview-total').textContent = 
+        anyToBeCalculated || anyToBeMeasured ? 'To be finalized' : totalValue;
 }
 
 // Format date to a readable format
@@ -416,6 +401,26 @@ function savePDF() {
         // Apply professional styling specifically for PDF generation
         const originalStyle = quotationElement.getAttribute('style') || '';
         quotationElement.setAttribute('style', 'background-color: white; max-width: 800px; margin: 0 auto;');
+        
+        // Ensure the QUOTE text and info box are displayed properly
+        const quoteInfo = quotationElement.querySelector('.quote-info');
+        if (quoteInfo) {
+            quoteInfo.style.backgroundColor = '#2c3e50';
+            quoteInfo.style.color = 'white';
+            quoteInfo.style.padding = '15px 20px';
+            quoteInfo.style.borderRadius = '8px';
+            quoteInfo.style.display = 'inline-block';
+            quoteInfo.style.margin = '15px 0';
+        }
+
+        // Make sure the QUOTE heading is visible with proper styling
+        const quoteHeading = quotationElement.querySelector('.quote-info h2');
+        if (quoteHeading) {
+            quoteHeading.style.color = 'white';
+            quoteHeading.style.margin = '0 0 5px 0';
+            quoteHeading.style.fontSize = '18px';
+            quoteHeading.style.fontWeight = 'bold';
+        }
         
         // Adjust table styling for PDF
         const thElements = quotationElement.querySelectorAll('th');
@@ -478,8 +483,28 @@ function savePDF() {
                     logoImg.style.visibility = 'visible';
                 }
                 
+                // Ensure the QUOTE text and info box are displayed properly
+                const quoteInfo = clonedDoc.querySelector('.quote-info');
+                if (quoteInfo) {
+                    quoteInfo.style.backgroundColor = '#2c3e50';
+                    quoteInfo.style.color = 'white';
+                    quoteInfo.style.padding = '15px 20px';
+                    quoteInfo.style.borderRadius = '8px';
+                    quoteInfo.style.display = 'inline-block';
+                    quoteInfo.style.margin = '15px 0';
+                }
+
+                // Make sure the QUOTE heading is visible with proper styling
+                const quoteHeading = clonedDoc.querySelector('.quote-info h2');
+                if (quoteHeading) {
+                    quoteHeading.style.color = 'white';
+                    quoteHeading.style.margin = '0 0 5px 0';
+                    quoteHeading.style.fontSize = '18px';
+                    quoteHeading.style.fontWeight = 'bold';
+                }
+                
                 // Ensure all styled elements in the cloned document are rendered properly
-                const elements = clonedDoc.querySelectorAll('.quote-table, .client-info, .quote-info, .important-points');
+                const elements = clonedDoc.querySelectorAll('.quote-table, .client-info, .important-points');
                 elements.forEach(el => {
                     if (el.style) {
                         el.style.boxShadow = 'none'; // Remove shadows for PDF
