@@ -35,8 +35,6 @@ header {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-
 h1, h2, h3, h4 {
     margin-bottom: 15px;
 }
@@ -639,56 +637,111 @@ button:hover {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-    .app-container {
-        flex-direction: column;
+    /* Enhanced mobile styles */
+    .container {
+        padding: 10px;
     }
-    
+
+    header {
+        padding: 15px 0;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .app-container {
+        gap: 20px;
+    }
+
+    .form-container, .preview-container {
+        padding: 15px;
+        min-width: unset;
+    }
+
     .item-row {
         flex-direction: column;
+        gap: 10px;
+        padding: 12px;
     }
-    
-    .item-details {
-        width: 100%;
-        margin-bottom: 15px;
-    }
-    
+
     .item-actions {
         width: 100%;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
-    
-    .total-input-group {
-        order: 1;
-    }
-    
-    .remove-item {
-        order: 2;
-    }
-    
-    .quote-header, .client-section {
+
+    .form-actions {
         flex-direction: column;
+        gap: 10px;
     }
-    
-    .quote-info, .expiration-info {
-        margin-top: 15px;
-    }
-    
-    .document-note-section {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .document-note {
-        margin-bottom: 20px;
-        text-align: center;
+
+    button, .print-btn {
         width: 100%;
+        padding: 12px;
+        font-size: 15px;
     }
-    
-    .company-seal {
-        text-align: center;
-        max-width: 100%;
+
+    .quote-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .client-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Phone-specific adjustments */
+    html {
+        font-size: 14px;
+    }
+
+    .form-group input, 
+    .form-group textarea, 
+    .form-group select {
+        font-size: 16px; /* Better for mobile keyboards */
+    }
+
+    .checkbox-label {
+        font-size: 14px;
+    }
+
+    .item-description {
+        font-size: 16px;
+    }
+
+    .print-buttons {
+        flex-direction: column;
+    }
+
+    .quote-table th, 
+    .quote-table td {
+        min-width: 120px; /* Prevent column collapse */
+        font-size: 12px;
+    }
+
+    .important-points li {
+        font-size: 13px;
+    }
+
+    /* Touch target optimizations */
+    .remove-item {
+        width: 35px;
+        height: 35px;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        transform: scale(1.3);
+        margin-right: 10px;
     }
 }
 
@@ -821,3 +874,4 @@ footer a:hover {
 #footerCredit {
     text-align: left;
     margin-left: 20px;
+}

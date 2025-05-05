@@ -382,7 +382,12 @@ function formatDate(dateString) {
     });
 }
 
-// Save as PDF function 
+// Add device detection function
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Modify savePDF function
 function savePDF() {
     // Validate the form first
     if (!validateForm()) {
@@ -595,7 +600,21 @@ function savePDF() {
             const quoteNumber = document.getElementById('quoteNumber').value.replace(/[^a-z0-9]/gi, '_');
             const filename = `quotation_${quoteNumber}_${clientName}.pdf`;
             
-            pdf.save(filename);
+            // Get PDF as data URL
+            const pdfData = pdf.output('datauristring');
+            
+            // For mobile devices
+            if (isMobileDevice()) {
+                const pdfWindow = window.open("");
+                pdfWindow.document.write(
+                    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+                );
+            }
+            // For desktop browsers
+            else {
+                pdf.save(filename);
+            }
+
             hideLoading();
         }).catch(error => {
             console.error('Error generating PDF:', error);
